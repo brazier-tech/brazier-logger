@@ -1,7 +1,4 @@
-﻿// brazier-logger.cpp: определяет точку входа для приложения.
-//
-
-#include "brazier-logger.h"
+﻿#include "brazier-logger.h"
 
 using namespace std;
 

@@ -32,6 +32,7 @@
 #include <fstream>
 #include <iterator>
 #include <stdexcept>
+#include <algorithm>
 
 namespace brazier::log {
 
