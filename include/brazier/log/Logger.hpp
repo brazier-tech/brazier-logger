@@ -62,6 +62,42 @@ namespace brazier::log {
         static void init(const std::string& filename);
         static void log(const std::string& message, const char* level = "INFO");
         static void log(const char* message, const char* level = "INFO");
+
+        /**
+         * @brief Log a message with the DEBUG level
+         * @param message Text to write to the log
+         */
+        static void debug(const std::string& message);
+        static void debug(const char* message);
+
+        /**
+         * @brief Log a message with the INFO level
+         * @param message Text to write to the log
+         */
+        static void info(const std::string& message);
+        static void info(const char* message);
+
+        /**
+         * @brief Log a message with the WARN level
+         * @param message Text to write to the log
+         */
+        static void warn(const std::string& message);
+        static void warn(const char* message);
+
+        /**
+         * @brief Log a message with the ERROR level
+         * @param message Text to write to the log
+         */
+        static void error(const std::string& message);
+        static void error(const char* message);
+
+        /**
+         * @brief Log a message with the SUCCESS level
+         * @param message Text to write to the log
+         */
+        static void success(const std::string& message);
+        static void success(const char* message);
+
         static void shutdown();
         static void registerSignalHandlers();
     };

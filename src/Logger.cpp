@@ -154,6 +154,21 @@ void Logger::log(const char* message, const char* level) {
     std::fprintf(stdout, "%s%s [%s] %s%s\n", timestamp, colorCode, level, resetCode, message);
 }
 
+void Logger::debug(const std::string& message)   { log(message, "DEBUG"); }
+void Logger::debug(const char* message)          { log(message, "DEBUG"); }
+
+void Logger::info(const std::string& message)    { log(message, "INFO"); }
+void Logger::info(const char* message)           { log(message, "INFO"); }
+
+void Logger::warn(const std::string& message)    { log(message, "WARN"); }
+void Logger::warn(const char* message)           { log(message, "WARN"); }
+
+void Logger::error(const std::string& message)   { log(message, "ERROR"); }
+void Logger::error(const char* message)          { log(message, "ERROR"); }
+
+void Logger::success(const std::string& message) { log(message, "SUCCESS"); }
+void Logger::success(const char* message)        { log(message, "SUCCESS"); }
+
 void Logger::shutdown() {
     if (logFile) {
         std::fclose(logFile);
