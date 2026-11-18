@@ -8,7 +8,6 @@ on:
 jobs:
 
   linux:
-    needs: resolve
     runs-on: ubuntu-latest
 
     strategy:
@@ -55,7 +54,6 @@ jobs:
       run: cmake --build build --config ${{ matrix.build_type }}
 
   windows:
-    needs: resolve
     runs-on: windows-latest
 
     strategy:
@@ -99,7 +97,6 @@ jobs:
       run: cmake --build build --config ${{ matrix.build_type }}
 
   macos:
-    needs: resolve
     runs-on: macos-latest
 
     strategy:
