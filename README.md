@@ -22,69 +22,28 @@ Logging is done both to file and console with color coding.
 | CMD       |  Purple    | Commands to use          |
 | DEBUG     |            | Debug information        |
 
-## Usage examples
+## Usage
+
+You can use the built-in methods ``log()``, ``info()``, ``debug()``, ``error()``, ``warn()``, and ``success()`` for logging like this:
 
 ```cpp
-Logger::log("Database connection established", "SUCCESS");
+Logger::info("Database connection established");
+Logger::debug("Connected to " + db.host + " in " + t + " ms!");
+```
 
-std::string username = "john_doe";
-Logger::log("User " + username + " logged in", "INFO");
-Logger::log("Debugging username", "DEBUG");
+Which will give ``[INFO] ... `` and ``[DEBUG] ... `` respectively.
 
-// It's similar to the one above, but the level doesn't need to be written manually
-Logger::success("Database connection established");
-Logger::info("User " + username + " logged in");
-Logger::debug("Debugging username");
+Alternatively, you may want to specify your own type by passing a second argument into ``log()`` like this:
 
-try {
-    
-} catch (const std::exception& e) {
-    Logger::error(std::string("Exception: ") + e.what());
-}
+```cpp
+Logger::log("Hello world!", "TEST");
 ```
 
 ## Installation
 
 This library is distributed via **vcpkg** as the standalone `brazier-logger` port — you can depend on it without pulling the whole brazier framework.
 
-### vcpkg.json
-
-```json
-{
-  "name": "your-project",
-  "version": "1.0.0",
-  "dependencies": [
-    "brazier-logger"
-  ]
-}
-```
-
-If you need other framework modules, just add them to `dependencies` (e.g. `brazier-core`, `brazier-orm`).
-
-### CMakeLists.txt
-
-```cmake
-project(your_project LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-find_package(brazier-logger CONFIG REQUIRED)
-
-add_executable(your_project main.cpp)
-
-target_link_libraries(your_project PRIVATE
-    brazier::logger
-)
-```
-
-Then just include the header:
-
-```cpp
-#include <brazier/log/Logger.hpp>
-```
-
-### Minimal project example
+Add `brazier-logger` to the list of dependencies in your `vcpkg.json` file:
 
 `vcpkg.json`
 
@@ -98,24 +57,23 @@ Then just include the header:
 }
 ```
 
+Add the following entries to your `CMakeLists.txt`, specifying to find the package, and link it to the target:
+
 `CMakeLists.txt`
 
 ```cmake
-cmake_minimum_required(VERSION 3.20)
-
-project(your_project LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# ...
 
 find_package(brazier-logger CONFIG REQUIRED)
 
-add_executable(your_project main.cpp)
+# ...
 
 target_link_libraries(your_project PRIVATE
     brazier::logger
 )
 ```
+
+You may then use `brazier-logger` in your project by including it in the relevant files like this:
 
 `main.cpp`
 
@@ -136,27 +94,6 @@ int main() {
 }
 ```
 
-### Building with the vcpkg manifest
-
-```bash
-cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=<path-to-vcpkg>/scripts/buildsystems/vcpkg.cmake
-cmake --build build
-```
-
-On the first run, vcpkg resolves `brazier-logger` and all of its dependencies from the manifest.
-
-## Custom wrappers
-
-If you don't want to bother writing levels using the `Logger::log()` method, then you have the option to use custom wrappers for logging:
-
-| Method         | Level      | Description              |
-|----------------|------------|--------------------------|
-| `error(msg)`   |  ERROR     | Critical errors          |
-| `warn(msg)`    |  WARNING   | Warnings                 |
-| `info(msg)`    |  INFO      | Informational messages   |
-| `success(msg)` |  SUCCESS   | Successful operations    |
-| `debug(msg)`   |            | Debug information        |
-
 ## Automatic log rotation
 
 All logs are saved and can be found at your_project_path/Storage/Logs
@@ -174,24 +111,14 @@ The system automatically rotates logs when the line limit is reached:
 
 - Current file: `debug.log`
 - Old file: `debug_old.log`
-- Default limit: 10,000 lines
-
-## Custom log levels
-
-```cpp
-Logger::log("Custom business event", "BUSINESS");
-Logger::log("Performance metric", "METRIC");
-Logger::log("Security audit", "AUDIT");
-```
+- Lines limit: 10,000
 
 ## Log format
 
 ### Console output (with colors)
 
-```text
-2024-01-15 14:30:25 [INFO] Application started
-2024-01-15 14:30:26 [SUCCESS] Database connected
-2024-01-15 14:30:27 [ERROR] Connection timeout
-```
+$\texttt{2024-01-15 14:30:25 }\textcolor{#00FFFF}{\texttt{[INFO]}}\texttt{ Application started}$
+$\texttt{2024-01-15 14:30:26 }\textcolor{#00FF00}{\texttt{[SUCCESS]}}\texttt{ Database connected}$
+$\texttt{2024-01-15 14:30:27 }\textcolor{#FF0000}{\texttt{[ERROR]}}\texttt{ Connection timeout}$
 
 The brazier logging system is ready for use in production environments and provides all necessary functions for effective application monitoring and debugging.
