@@ -117,8 +117,8 @@ The system automatically rotates logs when the line limit is reached:
 
 ### Console output (with colors)
 
-$\texttt{2024-01-15 14:30:25 }\textcolor{#00FFFF}{\texttt{[INFO]}}\texttt{ Application started}$
-$\texttt{2024-01-15 14:30:26 }\textcolor{#00FF00}{\texttt{[SUCCESS]}}\texttt{ Database connected}$
-$\texttt{2024-01-15 14:30:27 }\textcolor{#FF0000}{\texttt{[ERROR]}}\texttt{ Connection timeout}$
+$\texttt{2024-01-15 14:30:25 }\textcolor{#00FFFF}{\texttt{[INFO]}}\texttt{ Application started}$  
+$\texttt{2024-01-15 14:30:26 }\textcolor{#00FF00}{\texttt{[SUCCESS]}}\texttt{ Database connected}$  
+$\texttt{2024-01-15 14:30:27 }\textcolor{#FF0000}{\texttt{[ERROR]}}\texttt{ Connection timeout}$  
 
 The brazier logging system is ready for use in production environments and provides all necessary functions for effective application monitoring and debugging.
