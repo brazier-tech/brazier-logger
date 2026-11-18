@@ -43,6 +43,108 @@ try {
 }
 ```
 
+## Installation
+
+This library is distributed via **vcpkg** as the standalone `brazier-logger` port — you can depend on it without pulling the whole brazier framework.
+
+### vcpkg.json
+
+```json
+{
+  "name": "your-project",
+  "version": "1.0.0",
+  "dependencies": [
+    "brazier-logger"
+  ]
+}
+```
+
+If you need other framework modules, just add them to `dependencies` (e.g. `brazier-core`, `brazier-orm`).
+
+### CMakeLists.txt
+
+```cmake
+project(your_project LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(brazier-logger CONFIG REQUIRED)
+
+add_executable(your_project main.cpp)
+
+target_link_libraries(your_project PRIVATE
+    brazier::logger
+)
+```
+
+Then just include the header:
+
+```cpp
+#include <brazier/log/Logger.hpp>
+```
+
+### Minimal project example
+
+`vcpkg.json`
+
+```json
+{
+  "name": "your-project",
+  "version": "1.0.0",
+  "dependencies": [
+    "brazier-logger"
+  ]
+}
+```
+
+`CMakeLists.txt`
+
+```cmake
+cmake_minimum_required(VERSION 3.20)
+
+project(your_project LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(brazier-logger CONFIG REQUIRED)
+
+add_executable(your_project main.cpp)
+
+target_link_libraries(your_project PRIVATE
+    brazier::logger
+)
+```
+
+`main.cpp`
+
+```cpp
+#include <brazier/log/Logger.hpp>
+
+using namespace brazier::log;
+
+int main() {
+    Logger::init("app.log");
+
+    Logger::info("Hello");
+    Logger::warn("Careful");
+    Logger::error("Oops");
+
+    Logger::shutdown();
+    return 0;
+}
+```
+
+### Building with the vcpkg manifest
+
+```bash
+cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=<path-to-vcpkg>/scripts/buildsystems/vcpkg.cmake
+cmake --build build
+```
+
+On the first run, vcpkg resolves `brazier-logger` and all of its dependencies from the manifest.
+
 ## Custom wrappers
 
 If you don't want to bother writing levels using the `Logger::log()` method, then you have the option to use custom wrappers for logging:
