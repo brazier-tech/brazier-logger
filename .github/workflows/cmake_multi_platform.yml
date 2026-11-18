@@ -48,7 +48,7 @@ jobs:
         -DBUILD_TESTS=ON
         -DBUILD_APP=OFF
         -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
-        -S brazier-logger
+        -S .
 
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }}
@@ -91,7 +91,7 @@ jobs:
         -DBUILD_TESTS=ON
         -DBUILD_APP=OFF
         -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
-        -S brazier-logger
+        -S .
 
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }}
@@ -137,7 +137,7 @@ jobs:
         -DBUILD_TESTS=ON
         -DBUILD_APP=OFF
         -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
-        -S brazier-logger
+        -S .
 
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }}
