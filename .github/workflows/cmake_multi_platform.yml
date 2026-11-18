@@ -1,0 +1,159 @@
+name: CMake Multi-Platform Build
+
+on:
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+
+  linux:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+        build_type: [Release, Debug]
+        shared_libs: [ON, OFF]
+        include:
+          - compiler: gcc
+            c_compiler: gcc
+            cpp_compiler: g++
+          - compiler: clang
+            c_compiler: clang
+            cpp_compiler: clang++
+
+    steps:
+    - name: Checkout brazier-logger
+      uses: actions/checkout@v5
+
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+        vcpkgJsonGlob: 'vcpkg.json'
+
+    - name: Set VCPKG_ROOT
+      shell: bash
+      run: echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" >> $GITHUB_ENV
+
+    - name: Configure CMake
+      run: >
+        cmake -B build
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DBUILD_SHARED_LIBS=${{ matrix.shared_libs }}
+        -DBUILD_TESTS=ON
+        -DBUILD_APP=OFF
+        -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
+        -S .
+
+    - name: Build
+      run: cmake --build build --config ${{ matrix.build_type }}
+
+  windows:
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [cl]
+        build_type: [Release, Debug]
+        shared_libs: [ON, OFF]
+        include:
+          - compiler: cl
+            c_compiler: cl
+            cpp_compiler: cl
+
+    steps:
+    - name: Checkout brazier-logger
+      uses: actions/checkout@v5
+
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+        vcpkgJsonGlob: 'vcpkg.json'
+
+    - name: Set VCPKG_ROOT
+      shell: bash
+      run: echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" >> $GITHUB_ENV
+
+    - name: Configure CMake
+      run: >
+        cmake -B build
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DBUILD_SHARED_LIBS=${{ matrix.shared_libs }}
+        -DBUILD_TESTS=ON
+        -DBUILD_APP=OFF
+        -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
+        -S .
+
+    - name: Build
+      run: cmake --build build --config ${{ matrix.build_type }}
+
+  macos:
+    runs-on: macos-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [clang]
+        build_type: [Release, Debug]
+        shared_libs: [ON, OFF]
+        include:
+          - compiler: clang
+            c_compiler: clang
+            cpp_compiler: clang++
+
+    steps:
+    - name: Checkout brazier-logger
+      uses: actions/checkout@v5
+
+    - name: Install system dependencies
+      run: brew install autoconf
+
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+        vcpkgJsonGlob: 'vcpkg.json'
+
+    - name: Set VCPKG_ROOT
+      shell: bash
+      run: echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" >> $GITHUB_ENV
+
+    - name: Configure CMake
+      run: >
+        cmake -B build
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DBUILD_SHARED_LIBS=${{ matrix.shared_libs }}
+        -DBUILD_TESTS=ON
+        -DBUILD_APP=OFF
+        -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
+        -S .
+
+    - name: Build
+      run: cmake --build build --config ${{ matrix.build_type }}
+
+  required-check-aggregator:
+    name: Required Check Aggregator 
+    needs: [linux, windows, macos] 
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check all required jobs passed
+        run: |
+          if [[ "${{ needs.linux.result }}" != "success" || \
+                "${{ needs.windows.result }}" != "success" || \
+                "${{ needs.macos.result }}" != "success" ]]; then
+            echo "One or more required jobs failed or were skipped."
+            exit 1
+          fi
+          echo "All required jobs passed."
