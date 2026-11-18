@@ -26,7 +26,7 @@ jobs:
 
     steps:
     - name: Checkout brazier-logger
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v11
@@ -69,7 +69,7 @@ jobs:
 
     steps:
     - name: Checkout brazier-logger
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v11
@@ -112,7 +112,7 @@ jobs:
 
     steps:
     - name: Checkout brazier-logger
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Install system dependencies
       run: brew install autoconf
